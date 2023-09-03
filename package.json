@@ -8,6 +8,12 @@
   "main": "dist/main/index.js",
   "private": true,
   "type": "commonjs",
+  "engineStrict": true,
+  "engines": {
+    "node": ">=18",
+    "pnpm": ">=8"
+  },
+  "packageManager": "pnpm@8.7.0",
   "repository": {
     "type": "git",
     "url": "https://github.com/vitalics/toolbox.git"
