@@ -1,0 +1,38 @@
+name: Pull Request
+
+on:
+  pull_request:
+    branches:
+      - main
+
+# Automatically cancel in-progress actions on the same branch
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event_name == 'pull_request_target' && github.head_ref || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  setup:
+    name: Setup
+    runs-on: self-hosted
+    steps:
+      - uses: actions/checkout@v3
+      - uses: pnpm/action-setup@v2
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 18
+          cache: "pnpm"
+      - if: ${{ steps.cache-node.outputs.cache-hit != 'true' }}
+        run: pnpm install
+  pre-build:
+    name: Build Fontend part
+    needs: [setup]
+    runs-on: self-hosted
+    steps:
+      - name: Build Application
+        run: pnpm build:pre
+  build:
+    name: Build application
+    needs: [pre-build]
+    runs-on: [macos-12, windows-2022, ubuntu-22.04]
+    steps:
+      - run: pnpm build:ci
