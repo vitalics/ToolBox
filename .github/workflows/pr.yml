@@ -12,8 +12,11 @@ concurrency:
 
 jobs:
   setup:
-    name: Setup
-    runs-on: [macos-12, windows-2022, ubuntu-22.04]
+    name: Build
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v3
       - uses: pnpm/action-setup@v2
