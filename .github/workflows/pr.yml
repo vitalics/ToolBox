@@ -13,7 +13,7 @@ concurrency:
 jobs:
   setup:
     name: Setup
-    runs-on: ubuntu-latest
+    runs-on: [macos-12, windows-2022, ubuntu-22.04]
     steps:
       - uses: actions/checkout@v3
       - uses: pnpm/action-setup@v2
@@ -23,16 +23,6 @@ jobs:
           cache: "pnpm"
       - if: ${{ steps.cache-node.outputs.cache-hit != 'true' }}
         run: pnpm install
-  pre-build:
-    name: Build Fontend part
-    needs: [setup]
-    runs-on: ubuntu-latest
-    steps:
       - name: Build Application
         run: pnpm build:pre
-  build:
-    name: Build application
-    needs: [pre-build]
-    runs-on: [macos-12, windows-2022, ubuntu-22.04]
-    steps:
       - run: pnpm build:ci

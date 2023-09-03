@@ -11,9 +11,9 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  setup:
-    name: Setup
-    runs-on: ubuntu-latest
+  Build:
+    name: Build
+    runs-on:  [macos-12, windows-2022, ubuntu-22.04]
     steps:
       - uses: actions/checkout@v3
       - uses: pnpm/action-setup@v2
@@ -23,18 +23,8 @@ jobs:
           cache: "pnpm"
       - if: ${{ steps.cache-node.outputs.cache-hit != 'true' }}
         run: pnpm install
-  pre-build:
-    name: Build Fontend part
-    needs: [setup]
-    runs-on: ubuntu-latest
-    steps:
-      - name: Build Application
+      - name: Build Frontend
         run: pnpm build:pre
-  build:
-    name: Build application
-    needs: [pre-build]
-    runs-on: [macos-12, windows-2022, ubuntu-22.04]
-    steps:
       - uses: changesets/action@v1
         if: ${{ github.event_name != 'pull_request' }}
         with:
@@ -44,3 +34,4 @@ jobs:
           title: "[ci] release"
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
