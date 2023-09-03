@@ -13,7 +13,7 @@ concurrency:
 jobs:
   setup:
     name: Setup
-    runs-on: self-hosted
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
       - uses: pnpm/action-setup@v2
@@ -26,7 +26,7 @@ jobs:
   pre-build:
     name: Build Fontend part
     needs: [setup]
-    runs-on: self-hosted
+    runs-on: ubuntu-latest
     steps:
       - name: Build Application
         run: pnpm build:pre
